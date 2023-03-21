@@ -21,9 +21,10 @@ missing_test = test.isnull().sum()[test.isnull().sum() != 0]
 
 fig, axis = plt.subplots(1,2)
 fig.suptitle("Missing values distribution in test and train")
-
-sns.violinplot(missing_train, ax=axis[0])
-sns.boxplot(ax=axis[1], data=missing_test)
+sns.scatterplot(missing_train, ax=axis[0])
+axis[0].set_title("Train")
+sns.scatterplot(missing_test, ax=axis[1])
+axis[1].set_title("Test")
 plt.show()
 
 # Let us check the mutual information scores and
