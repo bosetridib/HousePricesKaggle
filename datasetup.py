@@ -25,6 +25,7 @@ sns.scatterplot(missing_train, ax=axis[0])
 axis[0].set_title("Train")
 sns.scatterplot(missing_test, ax=axis[1])
 axis[1].set_title("Test")
+plt.xticks(90)
 plt.show()
 
 # Let us check the mutual information scores and
