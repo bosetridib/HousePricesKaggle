@@ -21,11 +21,12 @@ missing_test = test.isnull().sum()[test.isnull().sum() != 0]
 
 fig, axis = plt.subplots(1,2)
 fig.suptitle("Missing values distribution in test and train")
-sns.scatterplot(missing_train, ax=axis[0])
+sns.barplot(x = missing_train.index, y = missing_train.values, ax=axis[0])
 axis[0].set_title("Train")
-sns.scatterplot(missing_test, ax=axis[1])
+axis[0].tick_params(axis = 'x', rotation=90)
+sns.barplot(x = missing_test.index, y = missing_test.values, ax=axis[0])
 axis[1].set_title("Test")
-axis.tick_params(axis = x, rotation=90)
+axis[1].tick_params(axis = 'x', rotation=90)
 plt.show()
 
 # Let us check the mutual information scores and
