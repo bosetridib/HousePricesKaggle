@@ -44,6 +44,30 @@ axis[1].bar_label(axis[1].containers[0])
 
 plt.show()
 
+# Alley, PoolQC, Fence, MiscFeature : these features
+# should be dropped in both train and test.
+
+train.drop(
+    columns=['Alley', 'PoolQC', 'Fence', 'MiscFeature'],
+    inplace=True
+)
+test.drop(
+    columns=['Alley', 'PoolQC', 'Fence', 'MiscFeature'],
+    inplace=True
+)
+
+# Lets check out the behavior of LotFrontage and
+# FireplaceQu.
+
+print(train[['LotFrontage', 'FireplaceQu']].info())
+
+# LotFrontage can be imputed with KNN, while
+# FireplaceQu would be transformed into a cateogory.
+
+from sklearn.impute import KNNImputer
+
+KNNImputer(train['LotFrontage'], n_neighbors=5)
+
 # Let us check the mutual information scores and
 # VIF of each feature.
 
