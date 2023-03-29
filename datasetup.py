@@ -2,8 +2,7 @@
 # kaggle's House prices competition.
 
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+from snsplot import *
 
 # Load the train and test data.
 train = pd.read_csv('train.csv')
