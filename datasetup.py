@@ -21,7 +21,6 @@ def missing_values():
         train.isnull().sum()[train.isnull().sum() != 0],
         test.isnull().sum()[test.isnull().sum() != 0]
     )
-
 missing_train, missing_test = missing_values()
 
 # Function to plot for Train and Test
@@ -62,7 +61,6 @@ test.drop(
     columns=['Alley', 'PoolQC', 'Fence', 'MiscFeature'],
     inplace=True
 )
-
 # Update missing values
 missing_train, missing_test = missing_values()
 
