@@ -70,25 +70,7 @@ print(train[['LotFrontage', 'FireplaceQu']].info())
 
 # LotFrontage can be imputed with KNN, while
 # FireplaceQu would be transformed into a cateogory.
-
-fig, axis = plt.subplots(1,2)
-fig.suptitle("LotFrontage in test and train")
-
-sns.histplot(
-    train['LotFrontage'],
-    ax=axis[0],     # The left side
-    palette="bright"
-)
-axis[0].set_title("Train")
-
-sns.histplot(
-    test['LotFrontage'],
-    ax=axis[1],     # The left side
-    palette="bright"
-)
-axis[1].set_title("Test")
-
-plt.show()
+sns_plot(train['LotFrontage'], test['LotFrontage'], 'histplot')
 
 # Both plots are seemingly normal distribution
 # family, and hence 4 neighbours are used.
