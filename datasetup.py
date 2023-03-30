@@ -39,6 +39,8 @@ test.drop(
 # Update missing values
 missing_train, missing_test = missing_values()
 
+sns_plot(missing_train, missing_test, 'barplot')
+
 # Lets check out the behavior of LotFrontage and
 # FireplaceQu.
 
@@ -46,7 +48,7 @@ print(train[['LotFrontage', 'FireplaceQu']].info())
 
 # LotFrontage can be imputed with KNN, while
 # FireplaceQu would be transformed into a cateogory.
-sns_plot(missing_train, missing_test, 'barplot')
+sns_plot(train['LotFrontage'], test['LotFrontage'], 'histplot')
 
 # Both plots are seemingly normal distribution
 # family, and hence 4 neighbours are used.
@@ -57,27 +59,23 @@ train['LotFrontage'] = global_KNNimputer.fit_transform(train[['LotFrontage']])
 test['LotFrontage'] = global_KNNimputer.fit_transform(test[['LotFrontage']])
 
 # Now we check for FireplaceQu.
+sns_plot(train['FireplaceQu'], test['FireplaceQu'], 'histplot')
 
-fig, axis = plt.subplots(1,2)
-fig.suptitle("FireplaceQu in test and train")
+# We should add NA as a category for the missing data.
+train['FireplaceQu'].fillna('NA', inplace = True)
+test['FireplaceQu'].fillna('NA', inplace = True)
 
-sns.histplot(
-    train['FireplaceQu'],
-    ax=axis[0],     # The left side
-    palette="bright"
-)
-axis[0].set_title("Train")
+# Now we should convert the column to a categorical
+train['FireplaceQu'] = train['FireplaceQu'].astype('category')
+test['FireplaceQu'] = test['FireplaceQu'].astype('category')
 
-sns.histplot(
-    test['FireplaceQu'],
-    ax=axis[1],     # The left side
-    palette="bright"
-)
-axis[1].set_title("Test")
+# Update the missing values
+missing_train, missing_test = missing_values()
 
-plt.show()
+sns_plot(missing_train, missing_test, 'barplot')
 
-# We should add for missing
+# Plot the datatypes, and convert strings to category.
+sns.histplot(train.dtypes.values)
 
 # Let us check the mutual information scores and
 # VIF of each feature.
