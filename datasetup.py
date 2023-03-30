@@ -22,32 +22,8 @@ def missing_values():
     )
 missing_train, missing_test = missing_values()
 
-# Function to plot for Train and Test
-
-fig, axis = plt.subplots(1,2)
-fig.suptitle("Missing values in test and train")
-
-sns.barplot(
-    x = missing_train.index,
-    y = missing_train.values,
-    ax=axis[0],     # The left side
-    palette="bright"
-)
-axis[0].set_title("Train")
-axis[0].tick_params(axis = 'x', rotation=90)
-axis[0].bar_label(axis[0].containers[0])
-
-sns.barplot(
-    x = missing_test.index,
-    y = missing_test.values,
-    ax=axis[1],     # The right side
-    palette="dark"
-)
-axis[1].set_title("Test")
-axis[1].tick_params(axis = 'x', rotation=90)
-axis[1].bar_label(axis[1].containers[0])
-
-plt.show()
+# Plot for Train and Test
+sns_plot(missing_train, missing_test, 'barplot')
 
 # Alley, PoolQC, Fence, MiscFeature : these features
 # should be dropped in both train and test.
@@ -70,7 +46,7 @@ print(train[['LotFrontage', 'FireplaceQu']].info())
 
 # LotFrontage can be imputed with KNN, while
 # FireplaceQu would be transformed into a cateogory.
-sns_plot(train['LotFrontage'], test['LotFrontage'], 'istplot')
+sns_plot(missing_train, missing_test, 'barplot')
 
 # Both plots are seemingly normal distribution
 # family, and hence 4 neighbours are used.

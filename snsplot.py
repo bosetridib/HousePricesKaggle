@@ -6,8 +6,10 @@ def sns_plot(feat_train, feat_test, sns_function):
     fig, axis = plt.subplots(1,2)
     fig.suptitle("Column in test and train")
 
-    if 'barplot' in str(sns_function):
+    if 'barplot' in sns_function:
+
         sns_function = getattr(sns, sns_function)
+
         sns_function(
             x = feat_train.index,
             y = feat_train.values,
@@ -29,8 +31,10 @@ def sns_plot(feat_train, feat_test, sns_function):
         axis[1].tick_params(axis = 'x', rotation=90)
         axis[1].bar_label(axis[1].containers[0])
     
-    elif 'histplot' in str(sns_function):
+    elif 'histplot' in sns_function:
+
         sns_function = getattr(sns, sns_function)
+
         sns_function(
             feat_train,
             ax=axis[0],     # The left side
