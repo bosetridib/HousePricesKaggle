@@ -74,8 +74,14 @@ missing_train, missing_test = missing_values()
 
 sns_plot(missing_train, missing_test, 'barplot')
 
-# Plot the datatypes, and convert strings to category.
-sns.histplot(train.dtypes.values)
+# Even after resolving the big missing values, we still
+# can not perform dropna.
+print(100 - (100*train.dropna().shape[0]/train.shape[0]), '%')
+print(100 - (100*test.dropna().shape[0]/test.shape[0]), '%')
+# Around 10% of dataloss will be caused with dropna.
+
+# Print the datatypes, and convert strings to category.
+print(train.dtypes.value_counts(), '\n\n', test.dtypes.value_counts())
 
 # Let us check the mutual information scores and
 # VIF of each feature.
