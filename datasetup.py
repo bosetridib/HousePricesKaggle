@@ -55,8 +55,34 @@ test.set_index('Id', inplace=True)
 missing_train, missing_test = missing_values()
 # sns_plot(missing_train, missing_test, 'barplot')
 
-# LotFrontage can be imputed with KNN, while
-# FireplaceQu would be transformed into a cateogory.
+# We should add NA as a category for the missing data.
+# Note that the inplace option gives warnings.
+for i in train.select_dtypes('object').columns:
+    train[i].fillna('NA', inplace=True)
+for i in test.select_dtypes('object').columns:
+    test[i].fillna('NA', inplace=True)
+missing_train, missing_test = missing_values()
+
+print(missing_train, '\n\n', missing_test)
+
+# Now we should convert the column to a categorical
+for i in train.select_dtypes('object').columns:
+    train[i] = train[i].astype('category')
+for i in test.select_dtypes('object').columns:
+    test[i] = test[i].astype('category')
+
+# Update the missing values
+missing_train, missing_test = missing_values()
+
+sns_plot(missing_train, missing_test, 'barplot')
+
+# Even after resolving the big missing values, we still
+# can push to not perform dropna.
+print(100 - (100*train.dropna().shape[0]/train.shape[0]), '%')
+print(100 - (100*test.dropna().shape[0]/test.shape[0]), '%')
+# Around 10% of dataloss will be caused with dropna.
+
+# LotFrontage can be imputed with KNN.
 # sns_plot(train['LotFrontage'], test['LotFrontage'], 'histplot')
 
 # Both plots are seemingly normal distribution
@@ -66,45 +92,6 @@ from sklearn.impute import KNNImputer
 global_KNNimputer = KNNImputer(n_neighbors=4)
 train['LotFrontage'] = global_KNNimputer.fit_transform(train[['LotFrontage']])
 test['LotFrontage'] = global_KNNimputer.fit_transform(test[['LotFrontage']])
-
-# We should add NA as a category for the missing data.
-# Note that the inplace option gives warnings.
-for i in train.select_dtypes('object').columns:
-    train[i].fillna('NA', inplace=True)
-missing_train, missing_test = missing_values()
-print(missing_train, missing_test)
-test[
-    test.select_dtypes('object').columns
-] = test[
-    test.select_dtypes('object').columns
-].fillna('NA')
-
-# Now we should convert the column to a categorical
-train[
-    train.select_dtypes('object').columns
-] = train[
-    train.select_dtypes('object').columns
-].astype('category')
-
-test[
-    test.select_dtypes('object').columns
-] = test[
-    test.select_dtypes('object').columns
-].fillna('NA')
-
-train[train.select_dtypes('object').columns] = train[train.select_dtypes('object').columns].astype('category')
-test['FireplaceQu'] = test['FireplaceQu'].astype('category')
-
-# Update the missing values
-missing_train, missing_test = missing_values()
-
-sns_plot(missing_train, missing_test, 'barplot')
-
-# Even after resolving the big missing values, we still
-# can not perform dropna.
-print(100 - (100*train.dropna().shape[0]/train.shape[0]), '%')
-print(100 - (100*test.dropna().shape[0]/test.shape[0]), '%')
-# Around 10% of dataloss will be caused with dropna.
 
 # Let us check the mutual information scores and
 # VIF of each feature.
