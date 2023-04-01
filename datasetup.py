@@ -57,12 +57,12 @@ missing_train, missing_test = missing_values()
 
 # We should add NA as a category for the missing data.
 # Note that the inplace option gives warnings.
-for i in train.select_dtypes('object').columns:
-    train[i].fillna('NA', inplace=True)
-for i in test.select_dtypes('object').columns:
-    test[i].fillna('NA', inplace=True)
-missing_train, missing_test = missing_values()
+for i in missing_train.index:
+    if train[i].dtype == 'object': train[i].fillna('NA', inplace=True)
+for i in missing_test.index:
+    if test[i].dtype == 'object': test[i].fillna('NA', inplace=True)
 
+missing_train, missing_test = missing_values()
 print(missing_train, '\n\n', missing_test)
 
 # Now we should convert the column to a categorical
@@ -83,7 +83,7 @@ print(100 - (100*test.dropna().shape[0]/test.shape[0]), '%')
 # Around 10% of dataloss will be caused with dropna.
 
 # LotFrontage can be imputed with KNN.
-# sns_plot(train['LotFrontage'], test['LotFrontage'], 'histplot')
+# sns_plot(train['GarageYrBlt'], test['GarageYrBlt'], 'histplot')
 
 # Both plots are seemingly normal distribution
 # family, and hence 4 neighbours are used.
@@ -93,12 +93,17 @@ global_KNNimputer = KNNImputer(n_neighbors=4)
 train['LotFrontage'] = global_KNNimputer.fit_transform(train[['LotFrontage']])
 test['LotFrontage'] = global_KNNimputer.fit_transform(test[['LotFrontage']])
 
+for i in missing_train.index:
+    train[i] = global_KNNimputer.fit_transform(train[[i]])
+for i in missing_test.index:
+    test[i] = global_KNNimputer.fit_transform(test[[i]])
+
 # Let us check the mutual information scores and
 # VIF of each feature.
 
 from sklearn.metrics import mutual_info_score
 
-X_train = train.drop(columns='SalePrice')
-Y_train = train['SalePrice']
+X_train = train.drop(columns='SalePrice').select_dtypes(['int64', 'float64']).values
+Y_train = train['SalePrice'].values
 
 mutual_info_score(X_train, Y_train)
