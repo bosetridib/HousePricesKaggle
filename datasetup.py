@@ -71,9 +71,6 @@ for i in train.select_dtypes('object').columns:
 for i in test.select_dtypes('object').columns:
     test[i] = test[i].astype('category')
 
-# Update the missing values
-missing_train, missing_test = missing_values()
-
 sns_plot(missing_train, missing_test, 'barplot')
 
 # Even after resolving the big missing values, we still
@@ -103,7 +100,12 @@ for i in missing_test.index:
 
 from sklearn.metrics import mutual_info_score
 
-X_train = train.drop(columns='SalePrice').select_dtypes(['int64', 'float64']).values
-Y_train = train['SalePrice'].values
+X_train = train.drop(columns='SalePrice').select_dtypes(['int64', 'float64'])
+Y_train = train['SalePrice']
 
-mutual_info_score(X_train, Y_train)
+mi_train_score = pd.Series(dtype='float64')
+for i in X_train.columns:
+    mi_train_score[i] = mutual_info_score(X_train[i], Y_train)
+
+mi_train_corr = X_train.corrwith(Y_train)
+sns_plot(mi_train_score,mi_train_corr,'barplot')
