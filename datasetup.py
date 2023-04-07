@@ -71,7 +71,7 @@ for i in train.select_dtypes('object').columns:
 for i in test.select_dtypes('object').columns:
     test[i] = test[i].astype('category')
 
-sns_plot(missing_train, missing_test, 'barplot')
+# sns_plot(missing_train, missing_test, 'barplot')
 
 # Even after resolving the big missing values, we still
 # can push to not perform dropna.
@@ -113,4 +113,4 @@ vif_train = pd.Series(dtype='float64')
 for i in range(X_train.shape[1]):
     vif_train[X_train.columns[i]] = vif(X_train,i)
 
-sns_plot(vif_train, mi_train_score,'barplot')
+# sns_plot(vif_train, mi_train_score,'barplot')
