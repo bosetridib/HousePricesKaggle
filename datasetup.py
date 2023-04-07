@@ -107,5 +107,10 @@ mi_train_score = pd.Series(dtype='float64')
 for i in X_train.columns:
     mi_train_score[i] = mutual_info_score(X_train[i], Y_train)
 
-mi_train_corr = X_train.corrwith(Y_train)
-sns_plot(mi_train_score,mi_train_corr,'barplot')
+from statsmodels.stats.outliers_influence import variance_inflation_factor as vif
+
+vif_train = pd.Series(dtype='float64')
+for i in range(X_train.shape[1]):
+    vif_train[X_train.columns[i]] = vif(X_train,i)
+
+sns_plot(vif_train, mi_train_score,'barplot')
