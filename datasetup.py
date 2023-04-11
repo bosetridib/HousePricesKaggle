@@ -113,4 +113,4 @@ vif_train = pd.Series(dtype='float64')
 for i in range(X_train.shape[1]):
     vif_train[X_train.columns[i]] = vif(X_train,i)
 
-# sns_plot(vif_train, mi_train_score,'barplot')
+sns_plot(vif_train, mi_train_score,'barplot')
