@@ -75,12 +75,12 @@ for i in test.select_dtypes('object').columns:
 
 # Even after resolving the big missing values, we still
 # can push to not perform dropna.
-print(100 - (100*train.dropna().shape[0]/train.shape[0]), '%')
-print(100 - (100*test.dropna().shape[0]/test.shape[0]), '%')
-# Around 10% of dataloss will be caused with dropna.
+print(100 - (100*train.dropna().shape[0]/train.shape[0]), 'percent')
+print(100 - (100*test.dropna().shape[0]/test.shape[0]), 'percent')
+# Around 20% of dataloss will be caused with dropna.
 
 # LotFrontage can be imputed with KNN.
-# sns_plot(train['GarageYrBlt'], test['GarageYrBlt'], 'histplot')
+# sns_plot(train['LotFrontage'], test['LotFrontage'], 'histplot')
 
 # Both plots are seemingly normal distribution
 # family, and hence 4 neighbours are used.
@@ -90,18 +90,27 @@ global_KNNimputer = KNNImputer(n_neighbors=4)
 train['LotFrontage'] = global_KNNimputer.fit_transform(train[['LotFrontage']])
 test['LotFrontage'] = global_KNNimputer.fit_transform(test[['LotFrontage']])
 
+# Same operation is repeated for all remaining int and
+# float missing values.
 for i in missing_train.index:
     train[i] = global_KNNimputer.fit_transform(train[[i]])
 for i in missing_test.index:
     test[i] = global_KNNimputer.fit_transform(test[[i]])
 
-# Let us check the mutual information scores and
-# VIF of each feature.
+# Since no missing values are left, let us delete the
+# unnecessary variables
+print(100 - (100*train.dropna().shape[0]/train.shape[0]), 'percent')
+print(100 - (100*test.dropna().shape[0]/test.shape[0]), 'percent')
 
-from sklearn.metrics import mutual_info_score
+del missing_train, missing_test
 
+# Define the train and test variables
 X_train = train.drop(columns='SalePrice').select_dtypes(['int64', 'float64'])
 Y_train = train['SalePrice']
+
+# Let us check the mutual information scores and
+# VIF of each feature.
+from sklearn.metrics import mutual_info_score
 
 mi_train_score = pd.Series(dtype='float64')
 for i in X_train.columns:
@@ -113,4 +122,5 @@ vif_train = pd.Series(dtype='float64')
 for i in range(X_train.shape[1]):
     vif_train[X_train.columns[i]] = vif(X_train,i)
 
-sns_plot(vif_train, mi_train_score,'barplot')
+# sns_plot(vif_train, mi_train_score,'barplot')
+del X_train, Y_train
