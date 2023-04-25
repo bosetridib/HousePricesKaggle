@@ -1,6 +1,6 @@
 from datasetup import *
-print(vif_train)
-print(mi_train_score)
+print(vif_train[vif_train<=2])
+print(mi_train_score[mi_train_score<2])
 
 X_train = train.drop(columns='SalePrice')
 Y_train = train['SalePrice']
@@ -13,3 +13,4 @@ Y_test = random_forest_model.predict(test.select_dtypes(['int64', 'float64']))
 Y_test = pd.DataFrame(Y_test, index=test.index, columns=['SalePrice'])
 Y_test.to_csv('submission.csv')
 
+# Hyperparameter optimization
