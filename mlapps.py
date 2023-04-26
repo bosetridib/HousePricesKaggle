@@ -40,3 +40,33 @@ Y_test = random_forest_model.predict(test.select_dtypes(['int64', 'float64']))
 
 Y_test = pd.DataFrame(Y_test, index=test.index, columns=['SalePrice'])
 Y_test.to_csv('submission.csv')
+
+# Gradient Boosting Regressor
+
+from sklearn.ensemble import GradientBoostingRegressor
+rmse = []
+
+for i,j,k in [(i,j,k) for i in range(100,3100,500) for j in range(1,21,4) for k in range(3,21,3)]:
+    
+    gradient_boost_model = GradientBoostingRegressor(n_estimators=i, max_depth=j, min_samples_leaf=k)
+    gradient_boost_model.fit(X_train.select_dtypes(['int64', 'float64']), Y_train.values)
+    
+    Y_train_est = gradient_boost_model.predict(X_train.select_dtypes(['int64', 'float64']))
+    
+    rmse.append(
+        {
+            'rmse':(sum( (Y_train.values - Y_train_est)**2 ) / len(Y_train))**0.5,
+            'i':i, 'j':j, 'k':k
+        }
+    )
+
+rmse = pd.DataFrame(rmse)
+[[r,i,j,k]] = rmse[rmse['rmse'] == rmse['rmse'].min()].values.tolist()
+i,j,k = int(i),int(j),int(k)
+gradient_boost_model = GradientBoostingRegressor(n_estimators=i, max_depth=j, max_leaf_nodes=k)
+del rmse,r,i,j,k
+gradient_boost_model.fit(X_train.select_dtypes(['int64', 'float64']), Y_train.values)
+Y_test = gradient_boost_model.predict(test.select_dtypes(['int64', 'float64']))
+
+Y_test = pd.DataFrame(Y_test, index=test.index, columns=['SalePrice'])
+Y_test.to_csv('submission.csv')
