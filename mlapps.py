@@ -13,6 +13,7 @@ Y_test = random_forest_model.predict(test.select_dtypes(['int64', 'float64']))
 Y_test = pd.DataFrame(Y_test, index=test.index, columns=['SalePrice'])
 Y_test.to_csv('submission.csv')
 
+
 # Hyperparameter optimization (Manual with for loop)
 rmse = []
 
@@ -40,6 +41,7 @@ Y_test = random_forest_model.predict(test.select_dtypes(['int64', 'float64']))
 
 Y_test = pd.DataFrame(Y_test, index=test.index, columns=['SalePrice'])
 Y_test.to_csv('submission.csv')
+
 
 # Gradient Boosting Regressor
 
@@ -70,3 +72,17 @@ Y_test = gradient_boost_model.predict(test.select_dtypes(['int64', 'float64']))
 
 Y_test = pd.DataFrame(Y_test, index=test.index, columns=['SalePrice'])
 Y_test.to_csv('submission.csv')
+
+
+# One-hot encoding
+
+# The more top frequency closer to the total frequency, the more the variable is useless.
+print(X_train.select_dtypes(['category']).describe().iloc[:,:10])
+X_train.drop(columns=['Street','Utilities','Condition2'], inplace=True)
+print(X_train.select_dtypes(['category']).describe().iloc[:,10:20])
+X_train.drop(columns=['RoofMatl'], inplace=True)
+print(X_train.select_dtypes(['category']).describe().iloc[:,20:30])
+X_train.drop(columns=['Heating'], inplace=True)
+print(X_train.select_dtypes(['category']).describe().iloc[:,30:])
+
+X_train_encoded = pd.get_dummies(X_train['ExterQual']).astype('int')
